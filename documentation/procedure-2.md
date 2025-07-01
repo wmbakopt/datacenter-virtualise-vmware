@@ -1,6 +1,6 @@
 # Datacenter Virtualisé sur VmWare
 
-Réalisé par William Mbakop et Célina Ait Bouali
+Réalisé par **William Mbakop** et **Célina Ait Bouali**
 
 ## Architecture
 
