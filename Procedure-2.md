@@ -1,5 +1,7 @@
 # Datacenter Virtualisé sur VmWare
 
+Réalisé par William Mbakop et Célina Ait Bouali
+
 ## Architecture
 
 ![](./images/architecture.png)
@@ -184,7 +186,7 @@ Clic droit sur zone de recherche inversée > nouvelle zone > suivant x4 > ID ré
 
 Déplier zone de recherche directe > sélectionner ntic.lan > clic droit sur dc01 > sélectionner propriétés > Cocher Mettre à jour l’enregistrement de pointeur (PTR) associé > Appliquer > ok
 
-Ouvrir l’invide de commande > saisir ipconfig /registerdns > saisir nslookup > vérifier que le serveur par défaut est dc01.ntic.lan avec une adresse ip 192.168.10.100
+Ouvrir l’invite de commande > saisir ipconfig /registerdns > saisir nslookup > vérifier que le serveur par défaut est dc01.ntic.lan avec une adresse ip 192.168.10.100
 ```
 
 ![](./images/img-10.png)
