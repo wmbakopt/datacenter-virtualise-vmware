@@ -1,37 +1,38 @@
 # Datacenter Virtualisé sur VmWare
 
+Réalisé par William Mbakop et Célina Ait Bouali
+
 ## Architecture
 
-![](./images/architecture.png)
+![](../images/architecture.png)
 
 
 ## Configuration du réseau virtuel
 
-NB : Utiliser un PC assez puissant (Minimum 64 Go de RAM) pour faire fonctionner toute l’infrastructure.
+NB : Notre PC n’est pas assez puissant pour faire fonctionner toute l’infrastructure.
 
-Conseil : Ouvrir le gestionnaire de tâches afin de surveiller l’évolution de la mémoire RAM.
+Nous avons donc utilisé deux Pcs pour faire fonctionner toute l’infrastructure. Chaque PC supportera une ou plusieurs VMs selon ses capacités.
 
-Dans la barre de recherche Cortana, saisir : gestionnaire de tâches > cliquer sur Performance > aller dans la rubrique Mémoire
+Cas 2 se présentent :
 
-```
-edit > virtual network editor > change settings:
+-	Soit on connecte le switch à un pc à l’aide d’un câble console et on accède à l’interface cli du switch grâce à PUTTY et s’assurer que le switch n’a pas de configuration personnalisée (VLAN) PUIS connecter les deux ordinateurs au switch à l’aide d’un câble Ethernet
 
--	Sélectionner VMnet1 :
-    o	Cocher Host only network
-    o	Subnet IP : 192.168.10.0 
-    o	Subnet mask : 255.255.255.0
+-	Soit par simplicité on interconnecte directement les deux PCs (sans passer par un switch)  à l’aide d’un câble Ethernet
 
--	 Sélectionner VMnet8 :
-    o	Cocher NAT 
-    o	Cocher Connect a host virtual adaptater to this network
-    o	Cocher Use Local DHCP service to distribute IP address to Vms
-    o	Subnet IP : 192.168.8.0 
-    o	Subnet mask : 255.255.255.0
+Dans la barre de recherche cortana ou dans l’invite de commande, saisir ncpa.cpl et identifier la carte réseau ethernet de la machine physique.
+
+edit > virtual network editor > change settings :
+-	sélectionner VMnet0 > cocher bridged (connect VMs directly to the external network) > bridged to : Sélectionner la carte réseau ethernet de la machine physique.
+
+-	Sélectionner VMnet8 :
+o	 Cocher NAT > Cocher Connect a host virtual adaptater to this network
+o	Cocher Use Local DHCP service to distribute IP address to Vms
+o	Subnet IP : 192.168.8.0 
+o	Subnet mask : 255.255.255.0
 
 Valider
-```
 
-![](./images/img-1.png)
+![](../images/procedure-2/img-1.png)
 
 
 ## Configuration du routeur
@@ -43,12 +44,11 @@ file > open > sélectionner le fichier DC qui se trouve dans Master2019\DC
 
 faire un full clone de DC : Cliquer droit sur DC > Cliquer sur Manage > Cliquer sur Clone > Suivant > Sélectionner The current state in the virtual machine > suivant > Sélectionner Create a full clone > Suivant > Saisir ROUTER > Terminer > Close
 
-Ajouter une carte réseau et la mettre dans un LAN Segment que l’on nommera LAN.
+Ajouter une carte réseau et la mettre en bridged
 
-Pour créer un LAN segment, Sélectionner la carte virtuelle > cocher LAN segment > cliquer sur LAN Segments > cliquer sur Add > Saisir un nom > Valider > Sélectionner le LAN segment qu’on vient de créer.
 ```
 
-![](./images/img-2.png)
+![](../images/procedure-2/img-2.png)
 
 
 Démarrer la VM et procéder à l'installation
@@ -79,14 +79,14 @@ Renommer la première carte réseau qui, normalement, est connectée au Wan :  I
 Clic droit sur la carte LAN > Propriétés > Double cliquer sur Protocole Internet version 4 (TCP/IPv4) > cocher Utiliser l’adresse IP suivante > saisir les données
 ```
 
-![](./images/img-3.png)
+![](../images/procedure-2/img-3.png)
 
 ```
 Cliquer sur OK > Décocher Protocole Internet version 6 (TCP/IPv6) > Cliquer sur OK > Redémarrer le serveur
 ```
 Ps : Pour information 192.168.8.2 est la passerelle par défaut du NAT configuré automatiquement par VMWare. On le trouve dans edit > virtual network editor > Sélectionner VMnet8 > NAT settings > Voir champs Gateway IP
 
-![](./images/img-4.png)
+![](../images/procedure-2/img-4.png)
 
 ### Installation et configuration du rôle routage :
 
@@ -108,10 +108,10 @@ Dans la barre de recherche Cortana, saisir paramètres de Windows Update > cliqu
 
 ```
 Faire un full clone de DC : Cliquer droit sur DC > Cliquer sur Manage > Cliquer sur Clone > Suivant > Sélectionner The current state in the virtual machine > suivant > Sélectionner Create a full clone > Suivant > Saisir DC01 > Terminer > Close
-Modifier la carte réseau : la mettre dans le LAN Segment créé plus haut 
+Modifier la carte réseau : la mettre en Bridged
 ```
 
-![](./images/img-5.png)
+![](../images/procedure-2/img-5.png)
 
 
 Démarrer la VM et procéder à l'installation
@@ -135,14 +135,14 @@ Renommer la carte réseau: LAN
 ```
 Clic droit sur la carte LAN > Propriétés > Double cliquer sur Protocole Internet version 4 (TCP/IPv4) > cocher Utiliser l’adresse IP suivante > saisir les données (cf. image ci-dessous) > Cliquer sur OK > Décocher Protocole Internet version 6 (TCP/IPv6) > Cliquer sur OK > Clic Droit sur la carte réseau > Désactiver > Clic droit sur la carte réseau > Activer
 ```
-![](./images/img-6.png)
+![](../images/procedure-2/img-6.png)
 
-Maintenant la VM doit avoir accès à internet ![](./images/img-7.png)
+Maintenant la VM doit avoir accès à internet ![](../images/procedure-2/img-7.png)
 
 
 Test de connectivité :
 
-![](./images/img-8.png)
+![](../images/procedure-2/img-8.png)
 
 ```
 Redémarrer le serveur
@@ -174,7 +174,7 @@ S’assurer que la VM a de nouveau accès à internet
 
 Test de connectivité : 
 
-![](./images/img-9.png)
+![](../images/procedure-2/img-9.png)
 
 
 ### Configuration de la zone inversée et du pointeur PTR
@@ -187,10 +187,10 @@ Clic droit sur zone de recherche inversée > nouvelle zone > suivant x4 > ID ré
 
 Déplier zone de recherche directe > sélectionner ntic.lan > clic droit sur dc01 > sélectionner propriétés > Cocher Mettre à jour l’enregistrement de pointeur (PTR) associé > Appliquer > ok
 
-Ouvrir l’invide de commande > saisir ipconfig /registerdns > saisir nslookup > vérifier que le serveur par défaut est dc01.ntic.lan avec une adresse ip 192.168.10.100
+Ouvrir l’invite de commande > saisir ipconfig /registerdns > saisir nslookup > vérifier que le serveur par défaut est dc01.ntic.lan avec une adresse ip 192.168.10.100
 ```
 
-![](./images/img-10.png)
+![](../images/procedure-2/img-10.png)
 
 
 ### Installation et configuration du DHCP
@@ -204,13 +204,13 @@ Outils > DHCP > Dérouler dc01.ntic.lan > dérouler IPV4
 Clic droit sur IPV4 > cliquer sur Nouvelle Etendue > Suivant > nom : IP_DHCP > Suivant > Adresse IP de début : 192.168.10.1 Adresse IP de fin : 192.168.10.254 > Suivant > Adresse IP de début : 192.168.10.1 Adresse IP de fin : 192.168.10.9 > Ajouter > Adresse IP de début : 192.168.10.100 Adresse IP de fin : 192.168.10.254 > Ajouter > Suivant x3 > Adresse IP : 192.168.10.254 > Ajouter > suivant x4 > terminer 
 ```
 
-![](./images/img-11.png)
+![](../images/procedure-2/img-11.png)
 
 ```
 Clic droit sur Options d’étendue > configurer les options > vérifier les options sont bien présentes :  003 Routeur, 006 Serveurs DNS et 015 Nom de domaine de DNS. Elles sont indispensables
 ```
 
-![](./images/img-12.png)
+![](../images/procedure-2/img-12.png)
 
 
 ## Installation et configuration des ESXI8-1, ESXI8-2 et ESXI8-3 
@@ -225,20 +225,20 @@ File > New virtual Machine > Next(X2) > VMware ESX (dernière version) > vitual 
 •	Settings > Add > Hard Disk > Next x3 > Cocher Store virtual disk as a single file > Next > Finish 
 •	CD/DVD > Use ISO image file : Sélectionner VMware-VMvisor-Installer-8.0U1a-21813344.x86_64.iso (Qu’on va récupérer dans le dossier virtualisation) 
 •	Processors : cocher Virtualize Intel VT-x/EPT or AMD-V/RVI
-•	 Network Adapter > Cocher LAN Segment > Sélectionner LAN > Cliquer sur Ok
+•	 Network Adapter > Cocher Bridged
 •	Cliquer sur l’onglet Options > Advanced > Dans la zone Firmware type :  cocher BIOS
 ```
 
-![](./images/img-13.png)
+![](../images/procedure-2/img-13.png)
 
-![](./images/img-14.png)
+![](../images/procedure-2/img-14.png)
 
 ```
 •	Lancer la VM :
 •	Enter > (F11) > Sélectionner le premier disk > French > P@ssword123 > Enter > (F11) > Enter
 ```
 
-![](./images/img-15.png)
+![](../images/procedure-2/img-15.png)
 
 
 ```
@@ -249,7 +249,7 @@ File > New virtual Machine > Next(X2) > VMware ESX (dernière version) > vitual 
 > Enter
 ```
 
-![](./images/img-16.png)
+![](../images/procedure-2/img-16.png)
 
 ```
 •	IPV6 Configuration > On coche Disable IPV6 > Enter 
@@ -258,19 +258,19 @@ File > New virtual Machine > Next(X2) > VMware ESX (dernière version) > vitual 
 
 Résultat : 
 
-![](./images/img-17.png)
+![](../images/procedure-2/img-17.png)
 
-![](./images/img-18.png)
+![](../images/procedure-2/img-18.png)
 
-![](./images/img-19.png)
+![](../images/procedure-2/img-19.png)
 
 Après le redémarrage, les données saisies précédemment apparaissent :
 
-![](./images/img-20.png)
+![](../images/procedure-2/img-20.png)
 
-![](./images/img-21.png)
+![](../images/procedure-2/img-21.png)
 
-![](./images/img-22.png)
+![](../images/procedure-2/img-22.png)
 
 
 ``` 
@@ -281,13 +281,13 @@ Sur la machine virtuelle DC01, aller sur le gestionnaire de serveur > Outils > D
 Faire la même procédure pour EXSI8-2 et EXSI8-3
 ``` 
 
-![](./images/img-23.png)
+![](../images/procedure-2/img-23.png)
 
 
 Et dans la zone inversée, on constate que les ajouts ont été effectués
 
 
-![](./images/img-24.png)
+![](../images/procedure-2/img-24.png)
 
 
 ## Installation et configuration du VSAN (Virtual SAN)
@@ -298,7 +298,7 @@ Et dans la zone inversée, on constate que les ajouts ont été effectués
 ``` 
 File > open > virtualisation > Virtual SAN > VSA > Virtual_SAN_Appliance_Trial > OVF > sélectionner le fichier VSA.ovf > Ouvrir > Cocher I Accept the terms of the license agreement > Next > Name for The new virtual Machine : VSA > Import
 
-Mettre la carte réseau sur LAN Segment
+Mettre la carte réseau en Bridged
 
 Vérification des disques témoin :
 
@@ -345,11 +345,11 @@ Attention : Si notre PC physique n’a pas suffisamment de ressources, il ne fau
 
 #### Création de la VM cliente 
 
-![](./images/img-25.png)
+![](../images/procedure-2/img-25.png)
 
 Démarrer la VM et procéder à l’installation > Une fois l’installation terminée > Installer les tools > Renommer le PC si besoin > Vérifier que le PC a la connectivité internet > Faire les mises à jour
 
-![](./images/img-26.png)
+![](../images/procedure-2/img-26.png)
 
 ####  Installation du logiciel sur la VM Cliente
 
@@ -396,7 +396,7 @@ Création du deuxième volume (qui sera rattaché in fine au stockage de l’ESX
 Création du volume Partagé : Clic droit sur clusterProd > New Volume > Volume Name : LUN-PARTAGE > Size : 140 > cliquer sur l’onglet Advanced > Cocher Thin (Si on met Full , tout l’espace sera bloqué sur notre disque physique) > Ok
 ```
 
-![](./images/img-27.png)
+![](../images/procedure-2/img-27.png)
 
 
 ## vCenter : Installation et configuration
@@ -451,7 +451,7 @@ Sur la VM-cliente, télécharger l’iso d’un système d’exploitation (Windo
 Cliquer sur l’icône stockage   > datastore1 > Explorateur de banque de données > Créer un répertoire > Nom du répertoire : iso > Cliquer sur Créer un répertoire > Cliquer sur Télécharger > Sélectionner un fichier iso > Cliquer sur Ouvrir > Attendre que le chargement du fichier se termine et cliquer sur fermer
 ```
 
-![](./images/img-28.png)
+![](../images/procedure-2/img-28.png)
 
 
 ```
@@ -472,11 +472,13 @@ Le but c’est que les deux esxi aient le stockage sur le réseau
 
 Se connecter à https://vcenter.ntic.lan:443
 
+```
 Cliquer sur esxi8-1.ntic.lan > Cliquer sur Adaptateurs de stockage > cliquer sur Ajouter un adaptateur logiciel > Cliquer sur Ajouter un adaptateur ISCSI > OK
 Dans l’onglet Propriétés qui se trouve en bas, aller sur le champ Nom ISCSI et noter le com. Dans notre exemple le nom c’est iqn.1998-01.com.vmware:esxi8-1.ntic.lan:1462349822:65
 
 Cliquer sur esxi8-2.ntic.lan > Cliquer sur Adaptateurs de stockage > cliquer sur Ajouter un adaptateur logiciel > Cliquer sur Ajouter un adaptateur ISCSI > OK
 Dans l’onglet Propriétés qui se trouve en bas, aller sur le champ Nom ISCSI et noter le com. Dans notre exemple le nom c’est iqn.1998-01.com.vmware:esxi8-2.ntic.lan:23072631:65
+
 
 Aller sur le VSAN > Dans l’arborescence, Cliquer droit sur Servers (0) > New Server > Name : esxi8-1 // Initiator Node Name : iqn.1998-01.com.vmware:esxi8-1.ntic.lan:1462349822:65 > Ok 
 
@@ -491,33 +493,39 @@ Revenir sur le Vcenter > Sélectionner esxi8-1.ntic.lan > Adaptateurs de stockag
 Aller dans l’onglet banque de données (tout en haut) > On voit qu’il y ‘a un disque > Cliquer sur Actions > Stockage > Nouvelle banque de données > Suivant > Nom : LUN1-ESXI8-1-110 // cocher le premier stockage (qui a 110 Go) > Suivant > Laisser cocher VMFS 6 (c’est la dernière version donc elle est plus sécurisée) > Suivant > Suivant > Terminer > On voit que le LUN va apparaitre. Désormais c’est comme si c’était un disque dur local alors que c’est sur une autre machine
 
 Cliquer sur Actions > Stockage > Nouvelle banque de données > Suivant > Nom : LUN-PARTAGE // cocher le stockage > Suivant > Laisser cocher VMFS 6 (c’est la dernière version donc elle est plus sécurisée) > Suivant > Suivant > Terminer > Dans l’onglet banque de données, on voit que le LUN-PARTAGE va apparaitre. 
+```
 
-![](./images/img-29.png)
+![](../images/procedure-2/img-29.png)
 
+```
 Sélectionner esxi8-2.ntic.lan > Adaptateurs de stockage > Sélectionner l’adaptateur iscsi qu’on a créé précédemment > Tout en bas cliquer sur Découverte dynamique > Cliquer sur Ajouter > Serveur ISCSI, mettre l’adresse du Cluster : 192.168.10.136 > OK > Cliquer sur Réanalyser le stockage > OK > Cliquer sur découverte statique > On constate que le LUN partage et le LUN ESXI-2 ont été importés.
 Aller dans l’onglet banque de données > On voit qu’il y ‘a un disque et le disque partagé (parce qu’il est partagé, comme il a été importé sur l’exsi8-1, il apparait sur l’esxi8-2 > Cliquer sur Actions > Stockage > Nouvelle banque de données > Suivant > Nom : LUN1-ESXI8-2-110 // cocher le premier stockage (qui a 110 Go) > Suivant > Laisser cocher VMFS 6 (c’est la dernière version donc elle est plus sécurisée) > Suivant > Suivant > Terminer > Dans l’onglet banque de données, on voit que le LUN va apparaitre. 
+```
 
 Désormais c’est comme si c’était un disque dur local alors que c’est sur une autre machine.
 
-![](./images/img-30.png)
+![](../images/procedure-2/img-30.png)
 
 
 ## Activation Vmotion
 
+```
 Clic droit sur esxi8-1.ntic.lan > Cliquer sur Adaptateurs VMkernel > cliquer sur les trois petits points verticaux > cliquer sur Modifier > Cocher vMotion > OK
-
+```
 
 ## Déplacement d’une VM d’un hôte vers un autre
 
 Exemple : déplacement de la VM-1 sui se trouve sur l’esxi8-1.ntic.lan vers l’esxi8-2.ntic.lan
 
-![](./images/img-31.png)
+![](../images/procedure-2/img-31.png)
 
 Pour qu’une VM se déplace, il y ‘ a deux conditions :
 -	Les esxi doivent être dans le même réseau
 -	La VM ne doit pas être connectée physiquement à un fichier ISO
 
+```
 Clic droit sur la VM-1 > Modifier les paramètres > Lecteur CD/DVD1 doit être sur Périphérique client (Il ne faut pas qu’il soit sur Fichier ISO, afin qu’il puisse se déplacer quand il veut. Qu’il n’ait pas d’attache quelque part) > Ok > Double cliquer sur VM-01 afin que l’écran s’ouvre en grand > Se connecter > Ouvrir Powershell et saisir les commandes suivantes pour activer les règles FPS via PowerShell : 
+```
 
 ```bash
 Get-NetFirewallRule *fps* | Enable-NetFirewallRule
@@ -527,11 +535,11 @@ Get-NetFirewallRule *fps* | Enable-NetFirewallRule
 Get-NetFirewallRule *fps* | Format-Table name , enabled
 ```
 
-![](./images/img-32.png)
+![](../images/procedure-2/img-32.png)
 
 Ouvrir l’invite de commande et saisir ipconfig /all pour récupérer l’adresse ip
 
-![](./images/img-33.png)
+![](../images/procedure-2/img-33.png)
 
 Aller sur le controleur de domaine DC01 > Ouvrir l’invite de commande et pinguer l’adresse IP de VM-1 : 
 
@@ -539,10 +547,17 @@ Aller sur le controleur de domaine DC01 > Ouvrir l’invite de commande et pingu
 ping 192.168.10.11 -t
 ```
 
+```
 Revenir sur vCenter > Clic droit sur VM-1 > Migrer > Cocher la ressource de calcul et le stockage > Suivant > Déplier jusqu’au bout et sélectionner esxi02.ntic.org > Suivant > Cocher LUN-Partage > Suivant x3 > Terminer 
+```
 
+```
 Revenir sur le DC01 qui est toujours entrain de pinguer.
 Est-ce qu’il va continuer de pinguer ou s’arréter alors que la migration est en cours ? Réponse : Il va continuer de pinguer. Donc il n’ya pas eu d’interruption des services
-Revenir sur Vcenter, et vérifier que la migration est terminée et que la vm est passée à l’esxi-1
+```
 
-![](./images/img-34.png)
+```
+Revenir sur Vcenter, et vérifier que la migration est terminée et que la vm est passée à l’esxi-1
+```
+
+![](../images/procedure-2/img-34.png)
