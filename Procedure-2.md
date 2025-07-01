@@ -7,31 +7,28 @@
 
 ## Configuration du réseau virtuel
 
-NB : Utiliser un PC assez puissant (Minimum 64 Go de RAM) pour faire fonctionner toute l’infrastructure.
+NB : Notre PC n’est pas assez puissant pour faire fonctionner toute l’infrastructure.
 
-Conseil : Ouvrir le gestionnaire de tâches afin de surveiller l’évolution de la mémoire RAM.
+Nous avons donc utilisé deux Pcs pour faire fonctionner toute l’infrastructure. Chaque PC supportera une ou plusieurs VMs selon ses capacités.
 
-Dans la barre de recherche Cortana, saisir : gestionnaire de tâches > cliquer sur Performance > aller dans la rubrique Mémoire
+Cas 2 se présentent :
 
-```
-edit > virtual network editor > change settings:
+-	Soit on connecte le switch à un pc à l’aide d’un câble console et on accède à l’interface cli du switch grâce à PUTTY et s’assurer que le switch n’a pas de configuration personnalisée (VLAN) PUIS connecter les deux ordinateurs au switch à l’aide d’un câble Ethernet
 
--	Sélectionner VMnet1 :
-    o	Cocher Host only network
-    o	Subnet IP : 192.168.10.0 
-    o	Subnet mask : 255.255.255.0
+-	Soit par simplicité on interconnecte directement les deux PCs (sans passer par un switch)  à l’aide d’un câble Ethernet
 
--	 Sélectionner VMnet8 :
-    o	Cocher NAT 
-    o	Cocher Connect a host virtual adaptater to this network
-    o	Cocher Use Local DHCP service to distribute IP address to Vms
-    o	Subnet IP : 192.168.8.0 
-    o	Subnet mask : 255.255.255.0
+Dans la barre de recherche cortana ou dans l’invite de commande, saisir ncpa.cpl et identifier la carte réseau ethernet de la machine physique.
+
+edit > virtual network editor > change settings :
+-	sélectionner VMnet0 > cocher bridged (connect VMs directly to the external network) > bridged to : Sélectionner la carte réseau ethernet de la machine physique.
+
+-	Sélectionner VMnet8 :
+o	 Cocher NAT > Cocher Connect a host virtual adaptater to this network
+o	Cocher Use Local DHCP service to distribute IP address to Vms
+o	Subnet IP : 192.168.8.0 
+o	Subnet mask : 255.255.255.0
 
 Valider
-```
-
-![](./images/img-1.png)
 
 
 ## Configuration du routeur
@@ -472,11 +469,13 @@ Le but c’est que les deux esxi aient le stockage sur le réseau
 
 Se connecter à https://vcenter.ntic.lan:443
 
+```
 Cliquer sur esxi8-1.ntic.lan > Cliquer sur Adaptateurs de stockage > cliquer sur Ajouter un adaptateur logiciel > Cliquer sur Ajouter un adaptateur ISCSI > OK
 Dans l’onglet Propriétés qui se trouve en bas, aller sur le champ Nom ISCSI et noter le com. Dans notre exemple le nom c’est iqn.1998-01.com.vmware:esxi8-1.ntic.lan:1462349822:65
 
 Cliquer sur esxi8-2.ntic.lan > Cliquer sur Adaptateurs de stockage > cliquer sur Ajouter un adaptateur logiciel > Cliquer sur Ajouter un adaptateur ISCSI > OK
 Dans l’onglet Propriétés qui se trouve en bas, aller sur le champ Nom ISCSI et noter le com. Dans notre exemple le nom c’est iqn.1998-01.com.vmware:esxi8-2.ntic.lan:23072631:65
+
 
 Aller sur le VSAN > Dans l’arborescence, Cliquer droit sur Servers (0) > New Server > Name : esxi8-1 // Initiator Node Name : iqn.1998-01.com.vmware:esxi8-1.ntic.lan:1462349822:65 > Ok 
 
@@ -491,11 +490,14 @@ Revenir sur le Vcenter > Sélectionner esxi8-1.ntic.lan > Adaptateurs de stockag
 Aller dans l’onglet banque de données (tout en haut) > On voit qu’il y ‘a un disque > Cliquer sur Actions > Stockage > Nouvelle banque de données > Suivant > Nom : LUN1-ESXI8-1-110 // cocher le premier stockage (qui a 110 Go) > Suivant > Laisser cocher VMFS 6 (c’est la dernière version donc elle est plus sécurisée) > Suivant > Suivant > Terminer > On voit que le LUN va apparaitre. Désormais c’est comme si c’était un disque dur local alors que c’est sur une autre machine
 
 Cliquer sur Actions > Stockage > Nouvelle banque de données > Suivant > Nom : LUN-PARTAGE // cocher le stockage > Suivant > Laisser cocher VMFS 6 (c’est la dernière version donc elle est plus sécurisée) > Suivant > Suivant > Terminer > Dans l’onglet banque de données, on voit que le LUN-PARTAGE va apparaitre. 
+```
 
 ![](./images/img-29.png)
 
+```
 Sélectionner esxi8-2.ntic.lan > Adaptateurs de stockage > Sélectionner l’adaptateur iscsi qu’on a créé précédemment > Tout en bas cliquer sur Découverte dynamique > Cliquer sur Ajouter > Serveur ISCSI, mettre l’adresse du Cluster : 192.168.10.136 > OK > Cliquer sur Réanalyser le stockage > OK > Cliquer sur découverte statique > On constate que le LUN partage et le LUN ESXI-2 ont été importés.
 Aller dans l’onglet banque de données > On voit qu’il y ‘a un disque et le disque partagé (parce qu’il est partagé, comme il a été importé sur l’exsi8-1, il apparait sur l’esxi8-2 > Cliquer sur Actions > Stockage > Nouvelle banque de données > Suivant > Nom : LUN1-ESXI8-2-110 // cocher le premier stockage (qui a 110 Go) > Suivant > Laisser cocher VMFS 6 (c’est la dernière version donc elle est plus sécurisée) > Suivant > Suivant > Terminer > Dans l’onglet banque de données, on voit que le LUN va apparaitre. 
+```
 
 Désormais c’est comme si c’était un disque dur local alors que c’est sur une autre machine.
 
@@ -504,8 +506,9 @@ Désormais c’est comme si c’était un disque dur local alors que c’est sur
 
 ## Activation Vmotion
 
+```
 Clic droit sur esxi8-1.ntic.lan > Cliquer sur Adaptateurs VMkernel > cliquer sur les trois petits points verticaux > cliquer sur Modifier > Cocher vMotion > OK
-
+```
 
 ## Déplacement d’une VM d’un hôte vers un autre
 
@@ -517,7 +520,9 @@ Pour qu’une VM se déplace, il y ‘ a deux conditions :
 -	Les esxi doivent être dans le même réseau
 -	La VM ne doit pas être connectée physiquement à un fichier ISO
 
+```
 Clic droit sur la VM-1 > Modifier les paramètres > Lecteur CD/DVD1 doit être sur Périphérique client (Il ne faut pas qu’il soit sur Fichier ISO, afin qu’il puisse se déplacer quand il veut. Qu’il n’ait pas d’attache quelque part) > Ok > Double cliquer sur VM-01 afin que l’écran s’ouvre en grand > Se connecter > Ouvrir Powershell et saisir les commandes suivantes pour activer les règles FPS via PowerShell : 
+```
 
 ```bash
 Get-NetFirewallRule *fps* | Enable-NetFirewallRule
