@@ -22,7 +22,7 @@ NB : Nous avons utilisé deux Pcs pour faire fonctionner toute l’infrastructur
 Sur les deux PCS,dans la barre de recherche cortana ou dans l’invite de commande, saisir ncpa.cpl et identifier la carte réseau ethernet de la machine physique. (enlever le câble Ethernet et la remettre et observer la carte réseau correspondante)
 
 edit > virtual network editor > change settings :
--	sélectionner VMnet0 > cocher bridged (connect VMs directly to the external network) > bridged to : Sélectionner la carte réseau ethernet de la machine physique.
+-	Sélectionner VMnet0 > cocher bridged (connect VMs directly to the external network) > bridged to : Sélectionner la carte réseau ethernet de la machine physique.
 
 -	Sélectionner VMnet8 > Cocher NAT > Cocher Connect a host virtual adaptater to this network > Cocher Use Local DHCP service to distribute IP address to Vms > Subnet IP : 192.168.8.0 > Subnet mask : 255.255.255.0
 
