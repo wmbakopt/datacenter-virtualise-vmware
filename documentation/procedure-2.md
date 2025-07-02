@@ -9,9 +9,7 @@ Réalisé par **William Mbakop** et **Célina Ait Bouali**
 
 ## Configuration du réseau virtuel
 
-NB : Notre PC n’est pas assez puissant pour faire fonctionner toute l’infrastructure.
-
-Nous avons donc utilisé deux Pcs pour faire fonctionner toute l’infrastructure. Chaque PC supportera une ou plusieurs VMs selon ses capacités.
+NB : Nous avons utilisé deux Pcs pour faire fonctionner toute l’infrastructure. Chaque PC supportera une ou plusieurs VMs selon ses capacités.
 
 2 cas de figure se présentent :
 
