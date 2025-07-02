@@ -13,22 +13,20 @@ NB : Notre PC n’est pas assez puissant pour faire fonctionner toute l’infras
 
 Nous avons donc utilisé deux Pcs pour faire fonctionner toute l’infrastructure. Chaque PC supportera une ou plusieurs VMs selon ses capacités.
 
-Cas 2 se présentent :
+2 cas de figure se présentent :
 
--	Soit on connecte le switch à un pc à l’aide d’un câble console et on accède à l’interface cli du switch grâce à PUTTY et s’assurer que le switch n’a pas de configuration personnalisée (VLAN) PUIS connecter les deux ordinateurs au switch à l’aide d’un câble Ethernet
+-	Soit on connecte le switch à un pc à l’aide d’un câble console et on accède à l’interface CLI du switch grâce à PUTTY. Il faudra s’assurer que le switch n’a pas de configuration personnalisée (VLAN) et ensuite il faudra connecter les deux ordinateurs au switch à l’aide d’un câble Ethernet
 
--	Soit par simplicité on interconnecte directement les deux PCs (sans passer par un switch)  à l’aide d’un câble Ethernet
+-	Soit on interconnecte directement les deux PCs (sans passer par un switch) à l’aide d’un câble Ethernet.
 
-Dans la barre de recherche cortana ou dans l’invite de commande, saisir ncpa.cpl et identifier la carte réseau ethernet de la machine physique.
+**Nous avons opté pour cette deuxième option.**
+
+Sur les deux PCS,dans la barre de recherche cortana ou dans l’invite de commande, saisir ncpa.cpl et identifier la carte réseau ethernet de la machine physique. (enlever le câble Ethernet et la remettre et observer la carte réseau correspondante)
 
 edit > virtual network editor > change settings :
 -	sélectionner VMnet0 > cocher bridged (connect VMs directly to the external network) > bridged to : Sélectionner la carte réseau ethernet de la machine physique.
 
--	Sélectionner VMnet8 :
-o	 Cocher NAT > Cocher Connect a host virtual adaptater to this network
-o	Cocher Use Local DHCP service to distribute IP address to Vms
-o	Subnet IP : 192.168.8.0 
-o	Subnet mask : 255.255.255.0
+-	Sélectionner VMnet8 > Cocher NAT > Cocher Connect a host virtual adaptater to this network > Cocher Use Local DHCP service to distribute IP address to Vms > Subnet IP : 192.168.8.0 > Subnet mask : 255.255.255.0
 
 Valider
 
@@ -45,7 +43,6 @@ file > open > sélectionner le fichier DC qui se trouve dans Master2019\DC
 faire un full clone de DC : Cliquer droit sur DC > Cliquer sur Manage > Cliquer sur Clone > Suivant > Sélectionner The current state in the virtual machine > suivant > Sélectionner Create a full clone > Suivant > Saisir ROUTER > Terminer > Close
 
 Ajouter une carte réseau et la mettre en bridged
-
 ```
 
 ![](../images/procedure-2/img-2.png)
