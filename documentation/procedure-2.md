@@ -19,7 +19,7 @@ NB : Nous avons utilisé deux Pcs pour faire fonctionner toute l’infrastructur
 
 **Nous avons opté pour cette deuxième option.**
 
-Sur les deux PCS,dans la barre de recherche cortana ou dans l’invite de commande, saisir ncpa.cpl et identifier la carte réseau ethernet de la machine physique. (enlever le câble Ethernet et la remettre et observer la carte réseau correspondante)
+Sur les deux PCs, dans la barre de recherche cortana ou dans l’invite de commande, saisir ncpa.cpl et identifier la carte réseau ethernet de la machine physique (enlever le câble Ethernet et le remettre et noter le nom de la carte réseau correspondante).
 
 edit > virtual network editor > change settings :
 -	Sélectionner VMnet0 > cocher bridged (connect VMs directly to the external network) > bridged to : Sélectionner la carte réseau ethernet de la machine physique.
