@@ -2,7 +2,7 @@
 
 ## Architecture
 
-![](../images/procedure-1/architecture.png)
+![](../images/architecture.png)
 
 
 ## Configuration du réseau virtuel
